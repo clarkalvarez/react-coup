@@ -1,0 +1,45 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.todo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+ 
+.todo {
+    width: 70%;
+    margin: 3rem auto 0 auto;    
+}
+ 
+.header {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+ 
+input {
+    padding: 10px 3px;
+    width: 100%;
+}
+ 
+.btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+ 
+.btn {
+    padding: 10px 1rem;
+    background: #334;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+ 
+.todo-content {
+    margin-top: 2rem;
+}

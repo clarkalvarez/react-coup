@@ -1,4 +1,4 @@
-
+import React from "react";
 
 const WaitingRoom = ({ history }) => {
     return (
@@ -22,7 +22,6 @@ const WaitingRoom = ({ history }) => {
                         </div>
                     </div>
                 </div>
-
             </div>
         </>
     )

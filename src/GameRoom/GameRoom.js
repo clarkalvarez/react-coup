@@ -1,7 +1,7 @@
 import Announcement from "./Announcement/Announcement";
 import Enemies from "./Enemies/Enemies";
 import Player from "./Player/Player";
-
+import React from "react";
 
 const GameRoom = ({ history }) => {
     return (
