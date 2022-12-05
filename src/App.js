@@ -1,5 +1,4 @@
 
-import Lobby from "./Lobby/Lobby";
 import { Route, Router, Switch } from "react-router-dom";
 import "./App.css";
 import React, { Component } from "react";
@@ -7,6 +6,7 @@ import history from "./history";
 import GameRoom from "./GameRoom/GameRoom";
 import WaitingRoom from "./WaitingRoom/WaitingRoom";
 import Todo from "./TestFirebase/Todo";
+import Lobby from "./Lobby/Lobby";
 class App extends Component {
   constructor(props) {
     super(props);
