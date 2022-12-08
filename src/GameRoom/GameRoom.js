@@ -3,17 +3,17 @@ import Enemies from "./Enemies/Enemies";
 import Player from "./Player/Player";
 import React from "react";
 
-const GameRoom = ({ history }) => {
+const GameRoom = ({match}) => {
     return (
         <>
             <div className="">
-                <Enemies />
+                <Enemies roomid={match.params.roomid}/>
             </div>
             <div className="">
                 <Announcement />
             </div>
             <div className="absolute bottom-0">
-                <Player />
+                <Player roomid={match.params.roomid} />
             </div>
         </>
     )

@@ -7,16 +7,16 @@ const WaitingRoom = ({ history }) => {
                 <div className="w-full max-w-sm">
                     <div className="md:flex md:items-center mb-6">
                         <div className="w-full text-center">
-                            <label class="block font-bold py-2 px-4 w-full text-xl">
+                            <label className="block font-bold py-2 px-4 w-full text-xl">
                                 Waiting for other players...
                             </label>
-                            <label class="block font-bold py-2 px-4 w-full">
+                            <label className="block font-bold py-2 px-4 w-full">
                                 Clark
                             </label>
-                            <label class="block font-bold py-2 px-4 w-full">
+                            <label className="block font-bold py-2 px-4 w-full">
                                 Ron
                             </label>
-                            <label class="block font-bold py-2 px-4 w-full">
+                            <label className="block font-bold py-2 px-4 w-full">
                                 Jolan
                             </label>
                         </div>
