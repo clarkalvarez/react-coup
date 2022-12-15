@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, doc } from "firebase/firestore";
+import { collection,  getDocs, doc,  onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from '../../firebase.js';
 
 const Enemies = (props) => {
@@ -8,64 +8,72 @@ const Enemies = (props) => {
 
     const playerName = localStorage.getItem('playerName')
 
-    const fetchEnemies = async () => {
-        
-        await getDocs(collection(db, "gameroom"))
-        .then((querySnapshot)=>{              
-            const newData = querySnapshot.docs.filter((result) => result.id === props.roomid).map((result) => ({...result.data() }))[0];
+    const fetchEnemies = () => {
+        onSnapshot(doc(db, "gameroom", props.roomid), (snapshot) => {
             let enemiesCards = [];
-             Object.keys(newData.players).forEach(result => {
-                if(result === playerName) {
+            let cards = [];
+            const newData = { ...snapshot.data() }
+            Object.keys(newData.players).forEach(result => {
+                if (result === playerName) {
                     return
                 }
                 const enemyCard = {
-                    [result]: newData.players[result]
+                    name: result,
+                    cards: newData.players[result]
                 }
                 enemiesCards.push(enemyCard)
             })
-            const getCards = newData.cards
-            enemiesCards.map((result) => {
-                console.log(result) 
-                console.log(Object.keys(result)[0]) 
-            })
-            console.log(enemiesCards)
+            cards = newData.cards
             setEnemiesCards(enemiesCards)
-            setCards(getCards)
+            setCards(cards)
         })
     }
 
+    const showCard = async (e, name, card, status) => {
+        e.preventDefault();
+        
+        await getDocs(collection(db, "gameroom"))
+            .then(async (querySnapshot) => {
+                const newData = querySnapshot.docs.filter((result) => result.id === props.roomid).map((result) => ({ ...result.data() }))[0];
+                const currentCards = newData.players;
+                currentCards[name][card]["status"] = status
+                await updateDoc(doc(db, "gameroom", props.roomid), {
+                    players: currentCards
+                });
+            })
+    }
     useEffect(()=>{
         fetchEnemies();
     }, [db])
 
+    
     return (
         <>
-        {enemiesCards.length > 0 &&
-            <div>
-                {enemiesCards.map(res => {
-                        <label>{Object.keys(res)[0]}</label>
-                    })
-                }
-            </div>
-            
-        }
-        {/* {enemiesCards.length !== 0 &&
             <div className="flex flex-row gap-6">
-                { enemiesCards?.map((cards,name) => {
-                    <div className="gap-2" key={name}>
+                {enemiesCards.map((result, i) => {
+                    return <div className="gap-2" key={[result.name]}>
                         <div className='text-center'>
-                            <label className='text-2xl font-bold'>name</label>
+                            <label className='text-2xl font-bold'>{result.name}</label>
                         </div>
-                    <div className="flex flex-row gap-2">
-                        {cards.card1}
-                        {cards.card2}
-                        <img className="w-20" src="/images/back.PNG" alt="back"/>
-                        <img className="w-20" src="/images/back.PNG" alt="back"/>
+                        <div className="flex flex-row gap-2">
+                            {result.cards.card1.status === 'hidden' 
+                                ?
+                                <img className="w-20" src="/images/back.PNG" alt="back" onClick={(event) => showCard(event, result.name, "card1", "show")} /> 
+                                :
+                                <img className="w-20" src={`/images/${result.cards?.card1?.card}.PNG`} alt={result.cards?.card1?.card} 
+                                    onClick={(event) => showCard(event, result.name, "card1", "hidden")}/>
+                            }
+                            {result.cards.card2.status === 'hidden'
+                                ?
+                                <img className="w-20" src="/images/back.PNG" alt="back" onClick={(event) => showCard(event, result.name, "card2", "show")} />
+                                :
+                                <img className="w-20" src={`/images/${result.cards?.card2?.card}.PNG`} alt={result.cards?.card1?.card}
+                                    onClick={(event) => showCard(event, result.name, "card2", "hidden")} />
+                            }
+                        </div>
                     </div>
-                </div>
                 })}
-            </div>
-        } */}
+            </div>  
         </>
     )
 }

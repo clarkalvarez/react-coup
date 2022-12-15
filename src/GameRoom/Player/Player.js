@@ -31,8 +31,8 @@ const Player = (props) => {
             {playerCards.length !== 0 && 
             
                <div className="flex flex-row">
-                  <img className="w-60 p-5" src={`/images/${playerCards?.card1}.PNG`} alt="assasin"/>
-                  <img className="w-60 p-5" src={`/images/${playerCards?.card2}.PNG`} alt="captain" />
+                  <img className="w-60 p-5" src={`/images/${playerCards?.card1?.card}.PNG`} alt="assasin"/>
+                    <img className="w-60 p-5" src={`/images/${playerCards?.card2?.card}.PNG`} alt="captain" />
                 </div>  
     
             }

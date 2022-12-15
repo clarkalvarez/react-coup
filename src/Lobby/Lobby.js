@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { collection, addDoc, getDocs, setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../firebase.js';
 import { useHistory } from "react-router-dom";
 
@@ -40,6 +40,12 @@ let history = useHistory();
                     card2
                 }
             }
+            console.log({
+                playerCount,
+                cards,
+                players: player
+            })
+
             const gameroomRef = await addDoc(collection(db, "gameroom"), {
                 playerCount,
                 cards,
@@ -69,6 +75,7 @@ let history = useHistory();
         const {cards, players, playerCount} = await getDocs(collection(db, "gameroom"))
         .then((querySnapshot)=>{              
             const newData = querySnapshot.docs.filter((result) => result.id === joinRoomId).map((result) => ({...result.data() }))[0];
+            console.log(querySnapshot)
             return {cards: newData.cards, players: newData.players, playerCount: newData.playerCount}
         }).catch(error => {
             alert("Room not found")
@@ -91,9 +98,6 @@ let history = useHistory();
 
         const {updatedCards, card1, card2} = initializeCards(cards)
 
-        console.log(card1)
-        console.log(card2)
-
         const updatePlayers = {...players,
             [joinPlayerName]: {
                 card1,
@@ -101,10 +105,9 @@ let history = useHistory();
             }
         }
         
-        await setDoc(doc(db, "gameroom", joinRoomId), {
+        await updateDoc(doc(db, "gameroom", joinRoomId), {
             cards: updatedCards,
             players: updatePlayers,
-            playerCount
         });
 
         localStorage.setItem('playerName', joinPlayerName);
@@ -119,7 +122,7 @@ let history = useHistory();
         const card2Index = (Math.random() * cards.length).toFixed(0);
         const card2 =  cards[card2Index]
         cards.splice(card2Index, 1);
-        return {updatedCards: cards, card1, card2}
+        return { updatedCards: cards, card1: { status: "hidden", card: card1 }, card2: { status: "hidden", card: card2 } }
     }
 
     const shuffleArray = (array)  => {
