@@ -40,16 +40,13 @@ let history = useHistory();
                     card2
                 }
             }
-            console.log({
-                playerCount,
-                cards,
-                players: player
-            })
 
             const gameroomRef = await addDoc(collection(db, "gameroom"), {
-                playerCount,
+                gameStatus: 'Waiting',
+                playerCount: parseInt(playerCount),
                 cards,
-                players: player
+                players: player,
+                playerArray: [playerName]
             });
             localStorage.setItem('playerName', playerName);
             
@@ -72,22 +69,25 @@ let history = useHistory();
             return
         }
 
-        const {cards, players, playerCount} = await getDocs(collection(db, "gameroom"))
+        const { cards, players, playerCount, gameStatus, playerArray } = await getDocs(collection(db, "gameroom"))
         .then((querySnapshot)=>{              
             const newData = querySnapshot.docs.filter((result) => result.id === joinRoomId).map((result) => ({...result.data() }))[0];
-            console.log(querySnapshot)
-            return {cards: newData.cards, players: newData.players, playerCount: newData.playerCount}
+            return { cards: newData.cards, players: newData.players, playerCount: newData.playerCount, gameStatus: newData.gameStatus, playerArray: newData.playerArray }
         }).catch(error => {
             alert("Room not found")
         })
-        const getCurrentPlayerNames = Object.keys(players);
-        
-        if(getCurrentPlayerNames.includes(joinPlayerName)) {
+
+        if(gameStatus !== "Waiting") {
+            alert("Game already started")
+            return
+        }
+
+        if(playerArray.includes(joinPlayerName)) {
             alert("Player name already exists")
             return
         }
 
-        if(getCurrentPlayerNames.length >= playerCount) {
+        if(playerArray.length >= playerCount) {
             alert("Room is full already")
             return
         }
@@ -104,10 +104,13 @@ let history = useHistory();
                 card2
             }
         }
+
+        playerArray.push(joinPlayerName);
         
         await updateDoc(doc(db, "gameroom", joinRoomId), {
             cards: updatedCards,
             players: updatePlayers,
+            playerArray
         });
 
         localStorage.setItem('playerName', joinPlayerName);

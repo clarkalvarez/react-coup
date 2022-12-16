@@ -3,31 +3,31 @@ import { collection,  getDocs, doc,  onSnapshot, updateDoc } from "firebase/fire
 import { db } from '../../firebase.js';
 
 const Enemies = (props) => {
-    const [enemiesCards, setEnemiesCards] = useState([]);
-    const [cards, setCards] = useState({});
+    // const [enemiesCards, setEnemiesCards] = useState([]);
+    // const [cards, setCards] = useState({});
 
-    const playerName = localStorage.getItem('playerName')
+    // const playerName = localStorage.getItem('playerName')
 
-    const fetchEnemies = () => {
-        onSnapshot(doc(db, "gameroom", props.roomid), (snapshot) => {
-            let enemiesCards = [];
-            let cards = [];
-            const newData = { ...snapshot.data() }
-            Object.keys(newData.players).forEach(result => {
-                if (result === playerName) {
-                    return
-                }
-                const enemyCard = {
-                    name: result,
-                    cards: newData.players[result]
-                }
-                enemiesCards.push(enemyCard)
-            })
-            cards = newData.cards
-            setEnemiesCards(enemiesCards)
-            setCards(cards)
-        })
-    }
+    // const fetchEnemies = () => {
+    //     onSnapshot(doc(db, "gameroom", props.roomid), (snapshot) => {
+    //         let enemiesCards = [];
+    //         let cards = [];
+    //         const newData = { ...snapshot.data() }
+    //         Object.keys(newData.players).forEach(result => {
+    //             if (result === playerName) {
+    //                 return
+    //             }
+    //             const enemyCard = {
+    //                 name: result,
+    //                 cards: newData.players[result]
+    //             }
+    //             enemiesCards.push(enemyCard)
+    //         })
+    //         cards = newData.cards
+    //         setEnemiesCards(enemiesCards)
+    //         setCards(cards)
+    //     })
+    // }
 
     const showCard = async (e, name, card, status) => {
         e.preventDefault();
@@ -42,15 +42,15 @@ const Enemies = (props) => {
                 });
             })
     }
-    useEffect(()=>{
-        fetchEnemies();
-    }, [db])
+    // useEffect(()=>{
+    //     fetchEnemies();
+    // }, [db])
 
     
     return (
         <>
             <div className="flex flex-row gap-6">
-                {enemiesCards.map((result, i) => {
+                {props.enemiesCards.map((result, i) => {
                     return <div className="gap-2" key={[result.name]}>
                         <div className='text-center'>
                             <label className='text-2xl font-bold'>{result.name}</label>
